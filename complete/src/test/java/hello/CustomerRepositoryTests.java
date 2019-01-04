@@ -17,6 +17,7 @@ package hello;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -53,6 +54,42 @@ public class CustomerRepositoryTests {
         Customer dave = repository.save(new Customer("Dave", "Matthews"));
 
         assertThat(dave.id).isNotNull();
+    }
+
+    @Test
+    public void setsAuditFieldsOnInsert() {
+
+        Customer customer = repository.insert(new Customer("Dave", "Matthews"));
+
+        assertThat(customer.createdDate).isNotNull();
+        assertThat(customer.updatedDate).isNotNull();
+    }
+
+    @Test
+    public void setsAuditFieldsOnInsertMulti() {
+
+        List<Customer> customers = repository.insert(Arrays.asList(new Customer("Dave", "Matthews")));
+
+        assertThat(customers.get(0).createdDate).isNotNull();
+        assertThat(customers.get(0).updatedDate).isNotNull();
+    }
+
+    @Test
+    public void setsAuditFieldsOnSave() {
+
+        Customer customer = repository.save(new Customer("Dave", "Matthews"));
+
+        assertThat(customer.createdDate).isNotNull();
+        assertThat(customer.updatedDate).isNotNull();
+    }
+
+    @Test
+    public void setsAuditFieldsOnSaveMulti() {
+
+        List<Customer> customers = repository.saveAll(Arrays.asList(new Customer("Dave", "Matthews")));
+
+        assertThat(customers.get(0).createdDate).isNotNull();
+        assertThat(customers.get(0).updatedDate).isNotNull();
     }
 
     @Test
